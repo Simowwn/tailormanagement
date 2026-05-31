@@ -89,7 +89,7 @@ export default function RecordPaymentModal({ orders }: { orders: Order[] }) {
               <option value="">— Select an order —</option>
               {orders.map((order) => (
                 <option key={order.id} value={order.id}>
-                  {order.customers?.full_name} — {order.garment_type} (${order.total_amount})
+                  {order.customers?.full_name} — {order.garment_type} (₱{order.total_amount})
                 </option>
               ))}
             </select>
@@ -118,7 +118,7 @@ export default function RecordPaymentModal({ orders }: { orders: Order[] }) {
 
           {/* Amount */}
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-700">Amount ($) *</label>
+            <label className="text-sm font-semibold text-gray-700">Amount (₱) *</label>
             <input
               type="number"
               name="amount"

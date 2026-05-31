@@ -85,7 +85,7 @@ export default async function OrdersPage() {
                       <td className="px-6 py-4">
                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
                       </td>
-                      <td className="px-6 py-4 text-right font-bold text-gray-700">${order.total_amount}</td>
+                      <td className="px-6 py-4 text-right font-bold text-gray-700">₱{order.total_amount}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -114,7 +114,7 @@ export default async function OrdersPage() {
                       <span>#{order.id.substring(0,8).toUpperCase()}</span>
                       {order.due_date && <span>Due: {new Date(order.due_date).toLocaleDateString()}</span>}
                     </div>
-                    <span className="font-extrabold text-gray-800">${order.total_amount}</span>
+                    <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
                   </div>
                 </div>
               ))}

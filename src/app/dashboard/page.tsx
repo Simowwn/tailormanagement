@@ -109,7 +109,7 @@ export default async function Dashboard() {
                         <td className="px-6 py-4">
                           <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
                         </td>
-                        <td className="px-6 py-4 text-right font-bold text-gray-700">${order.total_amount}</td>
+                        <td className="px-6 py-4 text-right font-bold text-gray-700">₱{order.total_amount}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -135,7 +135,7 @@ export default async function Dashboard() {
                     </div>
                     <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                       <span className="text-xs text-gray-500 font-medium">#{order.id.substring(0,8).toUpperCase()}</span>
-                      <span className="font-extrabold text-gray-800">${order.total_amount}</span>
+                      <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
                     </div>
                   </div>
                 ))}

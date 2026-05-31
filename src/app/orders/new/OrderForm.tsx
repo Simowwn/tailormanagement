@@ -153,7 +153,7 @@ export default function OrderForm({ customers }: { customers: any[] }) {
               <input type="date" name="due_date" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 ml-1">Total Amount ($) *</label>
+              <label className="text-sm font-semibold text-slate-700 ml-1">Total Amount (₱) *</label>
               <input type="number" name="total_amount" id="total_amount" required min="0" step="0.01" placeholder="0.00" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
             </div>
             <div className="space-y-2">
@@ -192,7 +192,7 @@ export default function OrderForm({ customers }: { customers: any[] }) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 ml-1">Payment Amount ($)</label>
+                <label className="text-sm font-semibold text-slate-700 ml-1">Payment Amount (₱)</label>
                 <input type="number" id="initial_payment" name="initial_payment" min="0" step="0.01" placeholder="0.00" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
               </div>
             </div>

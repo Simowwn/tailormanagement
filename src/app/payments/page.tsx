@@ -85,7 +85,7 @@ export default async function PaymentsPage() {
                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${typeStyle(payment.payment_type || 'Downpayment')}`}>{payment.payment_type || 'Downpayment'}</span>
                       </td>
                       <td className="px-6 py-4 text-gray-400 font-medium truncate max-w-xs">{payment.notes || '—'}</td>
-                      <td className="px-6 py-4 text-right font-extrabold text-emerald-600">${payment.amount}</td>
+                      <td className="px-6 py-4 text-right font-extrabold text-emerald-600">₱{payment.amount}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -111,7 +111,7 @@ export default async function PaymentsPage() {
                   </div>
                   <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                     <p className="text-xs text-gray-400 font-medium truncate max-w-[60%]">{payment.notes || '—'}</p>
-                    <span className="font-extrabold text-emerald-600">${payment.amount}</span>
+                    <span className="font-extrabold text-emerald-600">₱{payment.amount}</span>
                   </div>
                 </div>
               ))}

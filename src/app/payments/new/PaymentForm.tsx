@@ -53,7 +53,7 @@ export default function PaymentForm({ orders }: { orders: Order[] }) {
               <option value="">— Select an order —</option>
               {orders.map((order) => (
                 <option key={order.id} value={order.id}>
-                  {order.customers?.full_name} — {order.garment_type} (${order.total_amount})
+                  {order.customers?.full_name} — {order.garment_type} (₱{order.total_amount})
                 </option>
               ))}
             </select>
@@ -88,7 +88,7 @@ export default function PaymentForm({ orders }: { orders: Order[] }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 ml-1">Amount ($) *</label>
+              <label className="text-sm font-semibold text-gray-700 ml-1">Amount (₱) *</label>
               <input
                 type="number"
                 name="amount"
