@@ -104,7 +104,7 @@ export default async function Dashboard() {
                       </tr>
                     ) : recentOrders.map((order) => (
                       <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4 font-semibold text-gray-900">{order.customers?.full_name || 'Unknown'}</td>
+                        <td className="px-6 py-4 font-semibold text-gray-900"><Link href={`/orders/${order.id}`} className="hover:text-indigo-600 hover:underline">{order.customers?.full_name || 'Unknown'}</Link></td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{order.garment_type}</td>
                         <td className="px-6 py-4">
                           <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
@@ -128,7 +128,7 @@ export default async function Dashboard() {
                   <div key={order.id} className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <p className="font-bold text-gray-900 text-sm">{order.customers?.full_name || 'Unknown'}</p>
+                        <p className="font-bold text-gray-900 text-sm"><Link href={`/orders/${order.id}`} className="hover:text-indigo-600 hover:underline">{order.customers?.full_name || 'Unknown'}</Link></p>
                         <p className="text-xs text-gray-500 font-medium mt-0.5">{order.garment_type}</p>
                       </div>
                       <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
@@ -156,7 +156,7 @@ export default async function Dashboard() {
                       <p className="font-semibold text-gray-500 text-sm">No customers yet.</p>
                     </div>
                   ) : recentCustomers.map((customer, i) => (
-                    <div key={customer.id} className="flex items-center gap-3 group cursor-pointer">
+                    <Link href={`/customers/${customer.id}`} key={customer.id} className="flex items-center gap-3 group cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-colors">
                       <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0`}>
                         {getInitials(customer.full_name)}
                       </div>
@@ -164,7 +164,7 @@ export default async function Dashboard() {
                         <p className="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors truncate">{customer.full_name}</p>
                         <p className="text-xs text-gray-500 font-medium">{new Date(customer.created_at).toLocaleDateString()}</p>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>

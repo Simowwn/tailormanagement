@@ -79,7 +79,7 @@ export default async function PaymentsPage() {
                   ) : payments.map((payment) => (
                     <tr key={payment.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-gray-500 font-medium">{new Date(payment.payment_date).toLocaleDateString()}</td>
-                      <td className="px-6 py-4 font-semibold text-gray-900">{(payment.orders as any)?.customers?.full_name || 'Unknown'}</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900"><Link href={`/payments/${payment.id}`} className="hover:text-indigo-600 hover:underline">{(payment.orders as any)?.customers?.full_name || 'Unknown'}</Link></td>
                       <td className="px-6 py-4 text-gray-600 font-medium">{(payment.orders as any)?.id?.substring(0,8).toUpperCase()}</td>
                       <td className="px-6 py-4">
                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${typeStyle(payment.payment_type || 'Downpayment')}`}>{payment.payment_type || 'Downpayment'}</span>
@@ -104,7 +104,7 @@ export default async function PaymentsPage() {
                 <div key={payment.id} className="p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <p className="font-bold text-gray-900 text-sm">{(payment.orders as any)?.customers?.full_name || 'Unknown'}</p>
+                      <p className="font-bold text-gray-900 text-sm"><Link href={`/payments/${payment.id}`} className="hover:text-indigo-600 hover:underline">{(payment.orders as any)?.customers?.full_name || 'Unknown'}</Link></p>
                       <p className="text-xs text-gray-500 font-medium mt-0.5">{new Date(payment.payment_date).toLocaleDateString()} · #{(payment.orders as any)?.id?.substring(0,8).toUpperCase()}</p>
                     </div>
                     <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${typeStyle(payment.payment_type || 'Downpayment')}`}>{payment.payment_type || 'Downpayment'}</span>
