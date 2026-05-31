@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/AppShell"
 import { Users, Scissors, CalendarClock, AlertCircle, ArrowUpRight, PackageOpen } from "lucide-react"
+import { ClickableRow } from "@/components/ClickableRow"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
@@ -103,14 +104,14 @@ export default async function Dashboard() {
                         </td>
                       </tr>
                     ) : recentOrders.map((order) => (
-                      <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4 font-semibold text-gray-900"><Link href={`/orders/${order.id}`} className="hover:text-indigo-600 hover:underline">{order.customers?.full_name || 'Unknown'}</Link></td>
+                      <ClickableRow key={order.id} href={`/orders/${order.id}`} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 font-semibold text-gray-900 group-hover:text-indigo-600">{order.customers?.full_name || 'Unknown'}</td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{order.garment_type}</td>
                         <td className="px-6 py-4">
                           <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
                         </td>
                         <td className="px-6 py-4 text-right font-bold text-gray-700">₱{order.total_amount}</td>
-                      </tr>
+                      </ClickableRow>
                     ))}
                   </tbody>
                 </table>
@@ -125,10 +126,10 @@ export default async function Dashboard() {
                     <Link href="/orders/new" className="text-indigo-600 font-semibold hover:underline">Create one now</Link>
                   </div>
                 ) : recentOrders.map((order) => (
-                  <div key={order.id} className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
+                  <Link href={`/orders/${order.id}`} key={order.id} className="block bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:border-indigo-200 group transition-all">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <p className="font-bold text-gray-900 text-sm"><Link href={`/orders/${order.id}`} className="hover:text-indigo-600 hover:underline">{order.customers?.full_name || 'Unknown'}</Link></p>
+                        <p className="font-bold text-gray-900 text-sm group-hover:text-indigo-600 transition-colors">{order.customers?.full_name || 'Unknown'}</p>
                         <p className="text-xs text-gray-500 font-medium mt-0.5">{order.garment_type}</p>
                       </div>
                       <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
@@ -137,7 +138,7 @@ export default async function Dashboard() {
                       <span className="text-xs text-gray-500 font-medium">#{order.id.substring(0,8).toUpperCase()}</span>
                       <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
