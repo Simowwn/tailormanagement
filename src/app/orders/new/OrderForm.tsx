@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Scissors, Users, AlertCircle, Save } from "lucide-react"
 import { createCombinedOrder } from "./actions"
 import Link from "next/link"
@@ -9,8 +9,11 @@ export default function OrderForm({ customers }: { customers: any[] }) {
   const [isNewCustomer, setIsNewCustomer] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const isSubmitting = useRef(false)
 
   async function handleSubmit(formData: FormData) {
+    if (isSubmitting.current) return
+    isSubmitting.current = true
     setIsLoading(true)
     setError(null)
     formData.append("is_new_customer", isNewCustomer ? "true" : "false")
@@ -19,6 +22,7 @@ export default function OrderForm({ customers }: { customers: any[] }) {
     if (result?.error) {
       setError(result.error)
       setIsLoading(false)
+      isSubmitting.current = false
     }
   }
 

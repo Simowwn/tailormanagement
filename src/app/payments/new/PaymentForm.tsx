@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Save, AlertCircle } from "lucide-react"
 import { recordPayment } from "../actions"
 import Link from "next/link"
@@ -15,14 +15,18 @@ type Order = {
 export default function PaymentForm({ orders }: { orders: Order[] }) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const isSubmitting = useRef(false)
 
   async function handleSubmit(formData: FormData) {
+    if (isSubmitting.current) return
+    isSubmitting.current = true
     setIsLoading(true)
     setError(null)
     const result = await recordPayment(formData)
     if (result?.error) {
       setError(result.error)
       setIsLoading(false)
+      isSubmitting.current = false
     }
   }
 

@@ -3,14 +3,17 @@
 import { AppShell } from "@/components/AppShell"
 import { Users, ArrowLeft, Save, AlertCircle } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { createCustomer } from "./actions"
 
 export default function NewCustomerPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const isSubmitting = useRef(false)
 
   async function handleSubmit(formData: FormData) {
+    if (isSubmitting.current) return
+    isSubmitting.current = true
     setIsLoading(true)
     setError(null)
     try {
@@ -18,10 +21,12 @@ export default function NewCustomerPage() {
       if (result?.error) {
         setError(result.error)
         setIsLoading(false)
+        isSubmitting.current = false
       }
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred")
       setIsLoading(false)
+      isSubmitting.current = false
     }
   }
 

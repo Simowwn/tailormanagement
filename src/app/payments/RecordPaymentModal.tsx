@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { X, CreditCard, AlertCircle, Save } from "lucide-react"
 import { recordPayment } from "./actions"
 
@@ -15,17 +15,22 @@ export default function RecordPaymentModal({ orders }: { orders: Order[] }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const isSubmitting = useRef(false)
 
   async function handleSubmit(formData: FormData) {
+    if (isSubmitting.current) return
+    isSubmitting.current = true
     setIsLoading(true)
     setError(null)
     const result = await recordPayment(formData)
     if (result?.error) {
       setError(result.error)
       setIsLoading(false)
+      isSubmitting.current = false
     } else {
       setIsOpen(false)
       setIsLoading(false)
+      isSubmitting.current = false
     }
   }
 
