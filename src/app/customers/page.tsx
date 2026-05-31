@@ -11,7 +11,7 @@ export default async function CustomersPage({
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/')
 
   const resolvedSearchParams = await searchParams
   const query = resolvedSearchParams?.q || ''

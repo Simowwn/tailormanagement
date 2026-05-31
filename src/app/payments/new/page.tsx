@@ -8,7 +8,7 @@ import PaymentForm from "./PaymentForm"
 export default async function NewPaymentPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/')
 
   const { data: orders } = await supabase
     .from('orders')

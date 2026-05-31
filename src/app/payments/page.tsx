@@ -7,7 +7,7 @@ import Link from "next/link"
 export default async function PaymentsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/')
 
   const { data: payments } = await supabase
     .from('payments')

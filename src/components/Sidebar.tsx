@@ -14,7 +14,7 @@ export function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname()
 
   const navItems = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Customers", href: "/customers", icon: Users },
     { name: "Orders", href: "/orders", icon: Scissors },
     { name: "Payments", href: "/payments", icon: CreditCard },

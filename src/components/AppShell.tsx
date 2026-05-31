@@ -38,7 +38,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md shadow-indigo-500/20">
               <Scissors className="w-4 h-4 text-white" />
             </div>
