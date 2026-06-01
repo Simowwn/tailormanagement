@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/AppShell"
-import { Users, Scissors, CalendarClock, AlertCircle, ArrowUpRight, PackageOpen, CheckCircle2, PieChart } from "lucide-react"
+import { Users, Scissors, CalendarClock, AlertCircle, ArrowUpRight, PackageOpen, CheckCircle2, PieChart, Receipt } from "lucide-react"
 import { ClickableRow } from "@/components/ClickableRow"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
