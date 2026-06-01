@@ -10,6 +10,7 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
+  const { count: totalCustomers } = await supabase.from('customers').select('*', { count: 'exact', head: true })
   const { data: orders } = await supabase.from('orders').select('*, customers(full_name), payments(amount)').order('created_at', { ascending: false }).limit(5)
   const { data: customers } = await supabase.from('customers').select('*').order('created_at', { ascending: false }).limit(5)
   const { count: activeOrders } = await supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'Completed')
