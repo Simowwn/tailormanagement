@@ -41,8 +41,18 @@ export default function EditPaymentForm({ payment }: { payment: any }) {
             </select>
           </div>
           
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 ml-1">Order Amount Paid</label>
+            <input type="text" disabled value={`₱${payment.orders?.amount_paid || 0}`} className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 focus:outline-none font-medium cursor-not-allowed" />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 ml-1">Order Total Amount</label>
+            <input type="text" disabled value={`₱${payment.orders?.total_amount || 0}`} className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 focus:outline-none font-medium cursor-not-allowed" />
+          </div>
+
           <div className="space-y-2 md:col-span-2">
-            <label className="text-sm font-semibold text-slate-700 ml-1">Amount (₱) *</label>
+            <label className="text-sm font-semibold text-slate-700 ml-1">This Payment Amount (₱) *</label>
             <input type="number" name="amount" required min="0" step="0.01" defaultValue={payment.amount} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 font-medium" />
           </div>
           

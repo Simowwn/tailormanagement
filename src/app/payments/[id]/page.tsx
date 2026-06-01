@@ -13,7 +13,7 @@ export default async function EditPaymentPage({ params }: { params: { id: string
   const resolvedParams = await params
   const { id } = resolvedParams
 
-  const { data: payment } = await supabase.from('payments').select('*, orders(customers(full_name))').eq('id', id).single()
+  const { data: payment } = await supabase.from('payments').select('*, orders(total_amount, amount_paid, customers(full_name))').eq('id', id).single()
 
   if (!payment) redirect('/payments')
 
