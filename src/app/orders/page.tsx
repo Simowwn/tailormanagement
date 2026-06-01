@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/AppShell"
-import { Scissors, Search, Plus, PackageOpen } from "lucide-react"
+import { Scissors, Search, Plus, PackageOpen, CheckCircle2, PieChart } from "lucide-react"
 import { ClickableRow } from "@/components/ClickableRow"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
@@ -12,7 +12,7 @@ export default async function OrdersPage() {
 
   const { data: orders } = await supabase
     .from('orders')
-    .select('*, customers(full_name)')
+    .select('*, customers(full_name), payments(amount)')
     .order('created_at', { ascending: false })
 
   const statusStyle = (status: string) =>
@@ -63,13 +63,14 @@ export default async function OrdersPage() {
                     <th className="px-6 py-4 font-semibold">Garment</th>
                     <th className="px-6 py-4 font-semibold">Due Date</th>
                     <th className="px-6 py-4 font-semibold">Status</th>
-                    <th className="px-6 py-4 font-semibold text-right">Amount</th>
+                    <th className="px-6 py-4 font-semibold text-right">Total Amount</th>
+                    <th className="px-6 py-4 font-semibold text-right">Amount Paid</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {(!orders || orders.length === 0) ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-16 text-center">
+                      <td colSpan={7} className="px-6 py-16 text-center">
                         <div className="flex flex-col items-center gap-2 text-gray-400">
                           <PackageOpen className="w-10 h-10 opacity-40" />
                           <p className="font-semibold text-gray-500">No orders found.</p>
@@ -87,6 +88,42 @@ export default async function OrdersPage() {
                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
                       </td>
                       <td className="px-6 py-4 text-right font-bold text-gray-700">₱{order.total_amount}</td>
+                      <td className="px-6 py-4 text-right">
+                        {(() => {
+                          const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                          const isFullyPaid = totalPaid >= order.total_amount;
+                          const isUnpaid = totalPaid === 0;
+
+                          if (isFullyPaid) {
+                            return (
+                              <div className="flex flex-col items-end">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-bold text-emerald-600">₱{totalPaid.toFixed(2)}</span>
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                </div>
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-100/50 px-1.5 py-0.5 rounded mt-1">Paid in Full</span>
+                              </div>
+                            );
+                          } else if (isUnpaid) {
+                            return (
+                              <div className="flex flex-col items-end">
+                                <span className="font-bold text-gray-400">₱0.00</span>
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-rose-600 bg-rose-100/50 px-1.5 py-0.5 rounded mt-1">Unpaid</span>
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div className="flex flex-col items-end">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-bold text-amber-600">₱{totalPaid.toFixed(2)}</span>
+                                  <PieChart className="w-4 h-4 text-amber-500" />
+                                </div>
+                                <span className="text-[10px] text-gray-500 font-semibold mt-0.5">Bal: ₱{(order.total_amount - totalPaid).toFixed(2)}</span>
+                              </div>
+                            );
+                          }
+                        })()}
+                      </td>
                     </ClickableRow>
                   ))}
                 </tbody>
@@ -115,7 +152,38 @@ export default async function OrdersPage() {
                       <span>#{order.id.substring(0,8).toUpperCase()}</span>
                       {order.due_date && <span>Due: {new Date(order.due_date).toLocaleDateString()}</span>}
                     </div>
-                    <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                    {(() => {
+                      const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                      const isFullyPaid = totalPaid >= order.total_amount;
+                      const isUnpaid = totalPaid === 0;
+
+                      if (isFullyPaid) {
+                        return (
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-100/50 px-1.5 py-0.5 rounded">Paid</span>
+                            <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                          </div>
+                        );
+                      } else if (isUnpaid) {
+                        return (
+                          <div className="flex flex-col items-end">
+                            <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                            <span className="text-[10px] uppercase tracking-wider font-bold text-rose-600 bg-rose-100/50 px-1.5 py-0.5 rounded mt-0.5">Unpaid</span>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                              <PieChart className="w-4 h-4 text-amber-500" />
+                            </div>
+                            <span className="text-[10px] text-gray-500 font-semibold mt-0.5">Bal: ₱{(order.total_amount - totalPaid).toFixed(2)}</span>
+                          </div>
+                        );
+                      }
+                    })()}
                   </div>
                 </Link>
               ))}

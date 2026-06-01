@@ -112,3 +112,5 @@ CREATE POLICY "Users can update their own payments" ON payments
 
 CREATE POLICY "Users can delete their own payments" ON payments
   FOR DELETE USING (auth.uid() = user_id);
+
+
