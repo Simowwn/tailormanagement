@@ -12,7 +12,7 @@ export default async function OrdersPage() {
 
   const { data: orders } = await supabase
     .from('orders')
-    .select('*, customers(full_name), payments(amount)')
+    .select('*, customers(full_name)')
     .order('created_at', { ascending: false })
 
   const statusStyle = (status: string) =>
@@ -90,7 +90,7 @@ export default async function OrdersPage() {
                       <td className="px-6 py-4 text-right font-bold text-gray-700">₱{order.total_amount}</td>
                       <td className="px-6 py-4 text-right">
                         {(() => {
-                          const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                          const totalPaid = order.amount_paid || 0;
                           const isFullyPaid = totalPaid >= order.total_amount;
                           const isUnpaid = totalPaid === 0;
 
@@ -153,7 +153,7 @@ export default async function OrdersPage() {
                       {order.due_date && <span>Due: {new Date(order.due_date).toLocaleDateString()}</span>}
                     </div>
                     {(() => {
-                      const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                      const totalPaid = order.amount_paid || 0;
                       const isFullyPaid = totalPaid >= order.total_amount;
                       const isUnpaid = totalPaid === 0;
 

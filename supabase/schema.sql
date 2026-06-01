@@ -37,6 +37,7 @@ CREATE TABLE orders (
   garment_type TEXT NOT NULL,
   description TEXT,
   total_amount NUMERIC NOT NULL DEFAULT 0,
+  amount_paid NUMERIC NOT NULL DEFAULT 0,
   due_date DATE,
   status TEXT NOT NULL DEFAULT 'Pending', -- Pending, In Progress, Ready for Pickup, Completed, Cancelled
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -112,5 +113,25 @@ CREATE POLICY "Users can update their own payments" ON payments
 
 CREATE POLICY "Users can delete their own payments" ON payments
   FOR DELETE USING (auth.uid() = user_id);
+
+-- amount_paid Trigger
+CREATE OR REPLACE FUNCTION update_order_amount_paid()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    UPDATE orders SET amount_paid = amount_paid + NEW.amount WHERE id = NEW.order_id;
+  ELSIF TG_OP = 'UPDATE' THEN
+    UPDATE orders SET amount_paid = amount_paid - OLD.amount + NEW.amount WHERE id = NEW.order_id;
+  ELSIF TG_OP = 'DELETE' THEN
+    UPDATE orders SET amount_paid = amount_paid - OLD.amount WHERE id = OLD.order_id;
+  END IF;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_update_order_amount_paid ON payments;
+CREATE TRIGGER trigger_update_order_amount_paid
+AFTER INSERT OR UPDATE OR DELETE ON payments
+FOR EACH ROW EXECUTE FUNCTION update_order_amount_paid();
 
 

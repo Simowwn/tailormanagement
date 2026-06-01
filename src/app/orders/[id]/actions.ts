@@ -14,6 +14,7 @@ export async function updateOrder(id: string, formData: FormData) {
     garment_type: formData.get('garment_type') as string,
     description: formData.get('description') as string,
     total_amount: parseFloat(formData.get('total_amount') as string),
+    amount_paid: parseFloat(formData.get('amount_paid') as string) || 0,
     due_date: formData.get('due_date') as string || null,
     status: formData.get('status') as string,
   }

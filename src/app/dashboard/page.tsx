@@ -10,8 +10,7 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  const { count: totalCustomers } = await supabase.from('customers').select('*', { count: 'exact', head: true })
-  const { data: orders } = await supabase.from('orders').select('*, customers(full_name), payments(amount)').order('created_at', { ascending: false }).limit(5)
+  const { data: orders } = await supabase.from('orders').select('*, customers(full_name)').order('created_at', { ascending: false }).limit(5)
   const { data: customers } = await supabase.from('customers').select('*').order('created_at', { ascending: false }).limit(5)
   const { count: activeOrders } = await supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'Completed')
 
@@ -119,7 +118,7 @@ export default async function Dashboard() {
                         <td className="px-6 py-4 text-right font-bold text-gray-700">₱{order.total_amount}</td>
                         <td className="px-6 py-4 text-right">
                           {(() => {
-                            const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                            const totalPaid = order.amount_paid || 0;
                             const isFullyPaid = totalPaid >= order.total_amount;
                             const isUnpaid = totalPaid === 0;
 
@@ -179,7 +178,7 @@ export default async function Dashboard() {
                     <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                       <span className="text-xs text-gray-500 font-medium">#{order.id.substring(0,8).toUpperCase()}</span>
                       {(() => {
-                        const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                        const totalPaid = order.amount_paid || 0;
                         const isFullyPaid = totalPaid >= order.total_amount;
                         const isUnpaid = totalPaid === 0;
 

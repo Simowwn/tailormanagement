@@ -142,7 +142,7 @@ export default function OrderForm({ customers }: { customers: any[] }) {
           </div>
         </section>
 
-        {/* ORDER SECTION */}
+        {/* ORDER & PAYMENT SECTION */}
         <section className="space-y-4">
           <div className="border-b border-slate-200 pb-2">
             <h2 className="text-xl font-bold text-slate-900">3. Order Details</h2>
@@ -156,49 +156,44 @@ export default function OrderForm({ customers }: { customers: any[] }) {
               <label className="text-sm font-semibold text-slate-700 ml-1">Due Date</label>
               <input type="date" name="due_date" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
             </div>
+
+            <div className="space-y-3">
+              <label className="text-sm font-semibold text-slate-700 ml-1">Initial Payment (Optional)</label>
+              <div className="flex gap-4 pt-1">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input type="radio" name="payment_type" value="Downpayment" defaultChecked className="w-4 h-4 text-indigo-600 bg-white border-slate-300 focus:ring-indigo-500 focus:ring-2" />
+                  <span className="text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">Downpayment</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input type="radio" name="payment_type" value="Full Payment" className="w-4 h-4 text-indigo-600 bg-white border-slate-300 focus:ring-indigo-500 focus:ring-2" 
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        const totalInput = document.getElementById('total_amount') as HTMLInputElement;
+                        const paymentInput = document.getElementById('initial_payment') as HTMLInputElement;
+                        if (totalInput && paymentInput && totalInput.value) {
+                          paymentInput.value = totalInput.value;
+                        }
+                      }
+                    }}
+                  />
+                  <span className="text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">Full Payment</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700 ml-1">Payment Amount (₱)</label>
+              <input type="number" id="initial_payment" name="initial_payment" min="0" step="0.01" placeholder="0.00" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium shadow-sm" />
+            </div>
+
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 ml-1">Total Amount (₱) *</label>
               <input type="number" name="total_amount" id="total_amount" required min="0" step="0.01" placeholder="0.00" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
             </div>
-            <div className="space-y-2">
+
+            <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-semibold text-slate-700 ml-1">Description / Notes</label>
               <textarea name="description" rows={3} placeholder="Fabric details, style preferences..." className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 resize-none font-medium" />
-            </div>
-          </div>
-        </section>
-
-        {/* PAYMENT SECTION */}
-        <section className="space-y-4">
-          <div className="border-b border-slate-200 pb-2">
-            <h2 className="text-xl font-bold text-slate-900">4. Initial Payment (Optional)</h2>
-            <p className="text-sm text-slate-500 font-medium">Record an upfront payment for this order.</p>
-          </div>
-          <div className="bg-slate-50/50 rounded-2xl border border-slate-100 p-6 space-y-5">
-            <div className="flex gap-6">
-              <label className="flex items-center gap-2.5 cursor-pointer group">
-                <input type="radio" name="payment_type" value="Downpayment" defaultChecked className="w-4 h-4 text-indigo-600 bg-white border-slate-300 focus:ring-indigo-500 focus:ring-2" />
-                <span className="text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">Downpayment</span>
-              </label>
-              <label className="flex items-center gap-2.5 cursor-pointer group">
-                <input type="radio" name="payment_type" value="Full Payment" className="w-4 h-4 text-indigo-600 bg-white border-slate-300 focus:ring-indigo-500 focus:ring-2" 
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      const totalInput = document.getElementById('total_amount') as HTMLInputElement;
-                      const paymentInput = document.getElementById('initial_payment') as HTMLInputElement;
-                      if (totalInput && paymentInput && totalInput.value) {
-                        paymentInput.value = totalInput.value;
-                      }
-                    }
-                  }}
-                />
-                <span className="text-sm font-bold text-slate-600 group-hover:text-indigo-600 transition-colors">Full Payment</span>
-              </label>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 ml-1">Payment Amount (₱)</label>
-                <input type="number" id="initial_payment" name="initial_payment" min="0" step="0.01" placeholder="0.00" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
-              </div>
             </div>
           </div>
         </section>
