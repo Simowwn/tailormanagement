@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/AppShell"
-import { CreditCard, Search, Plus, PiggyBank } from "lucide-react"
+import { CreditCard, Search, Plus, PiggyBank, Receipt } from "lucide-react"
 import { ClickableRow } from "@/components/ClickableRow"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
