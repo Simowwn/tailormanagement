@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/AppShell"
-import { Users, Scissors, CalendarClock, AlertCircle, ArrowUpRight, PackageOpen } from "lucide-react"
+import { Users, Scissors, CalendarClock, AlertCircle, ArrowUpRight, PackageOpen, CheckCircle2, PieChart } from "lucide-react"
 import { ClickableRow } from "@/components/ClickableRow"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
@@ -11,7 +11,7 @@ export default async function Dashboard() {
   if (!user) redirect('/')
 
   const { count: totalCustomers } = await supabase.from('customers').select('*', { count: 'exact', head: true })
-  const { data: orders } = await supabase.from('orders').select('*, customers(full_name)').order('created_at', { ascending: false }).limit(5)
+  const { data: orders } = await supabase.from('orders').select('*, customers(full_name), payments(amount)').order('created_at', { ascending: false }).limit(5)
   const { data: customers } = await supabase.from('customers').select('*').order('created_at', { ascending: false }).limit(5)
   const { data: unpaidOrders } = await supabase.from('orders').select('id, total_amount')
   const { count: activeOrders } = await supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'Completed')
@@ -110,7 +110,42 @@ export default async function Dashboard() {
                         <td className="px-6 py-4">
                           <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusStyle(order.status)}`}>{order.status}</span>
                         </td>
-                        <td className="px-6 py-4 text-right font-bold text-gray-700">₱{order.total_amount}</td>
+                        <td className="px-6 py-4 text-right">
+                          {(() => {
+                            const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                            const isFullyPaid = totalPaid >= order.total_amount;
+                            const isUnpaid = totalPaid === 0;
+
+                            if (isFullyPaid) {
+                              return (
+                                <div className="flex flex-col items-end">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-bold text-gray-700">₱{order.total_amount}</span>
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                  </div>
+                                  <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-100/50 px-1.5 py-0.5 rounded mt-1">Paid in Full</span>
+                                </div>
+                              );
+                            } else if (isUnpaid) {
+                              return (
+                                <div className="flex flex-col items-end">
+                                  <span className="font-bold text-gray-700">₱{order.total_amount}</span>
+                                  <span className="text-[10px] uppercase tracking-wider font-bold text-rose-600 bg-rose-100/50 px-1.5 py-0.5 rounded mt-1">Unpaid</span>
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div className="flex flex-col items-end">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-bold text-gray-700">₱{order.total_amount}</span>
+                                    <PieChart className="w-4 h-4 text-amber-500" />
+                                  </div>
+                                  <span className="text-[10px] text-gray-500 font-semibold mt-0.5">Bal: ₱{(order.total_amount - totalPaid).toFixed(2)}</span>
+                                </div>
+                              );
+                            }
+                          })()}
+                        </td>
                       </ClickableRow>
                     ))}
                   </tbody>
@@ -136,7 +171,38 @@ export default async function Dashboard() {
                     </div>
                     <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                       <span className="text-xs text-gray-500 font-medium">#{order.id.substring(0,8).toUpperCase()}</span>
-                      <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                      {(() => {
+                        const totalPaid = order.payments?.reduce((sum: number, p: any) => sum + p.amount, 0) || 0;
+                        const isFullyPaid = totalPaid >= order.total_amount;
+                        const isUnpaid = totalPaid === 0;
+
+                        if (isFullyPaid) {
+                          return (
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-600 bg-emerald-100/50 px-1.5 py-0.5 rounded">Paid</span>
+                              <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                            </div>
+                          );
+                        } else if (isUnpaid) {
+                          return (
+                            <div className="flex flex-col items-end">
+                              <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                              <span className="text-[10px] uppercase tracking-wider font-bold text-rose-600 bg-rose-100/50 px-1.5 py-0.5 rounded mt-0.5">Unpaid</span>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div className="flex flex-col items-end">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-extrabold text-gray-800">₱{order.total_amount}</span>
+                                <PieChart className="w-4 h-4 text-amber-500" />
+                              </div>
+                              <span className="text-[10px] text-gray-500 font-semibold mt-0.5">Bal: ₱{(order.total_amount - totalPaid).toFixed(2)}</span>
+                            </div>
+                          );
+                        }
+                      })()}
                     </div>
                   </Link>
                 ))}
