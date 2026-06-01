@@ -54,14 +54,16 @@ export default function EditOrderForm({ order }: { order: any }) {
           </div>
           
           <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 ml-1">Amount Paid (₱)</label>
+            <input type="number" name="amount_paid" min="0" step="0.01" defaultValue={order.amount_paid || 0} className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium shadow-sm" />
+          </div>
+
+          <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700 ml-1">Total Amount (₱) *</label>
             <input type="number" name="total_amount" required min="0" step="0.01" defaultValue={order.total_amount} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700 ml-1">Amount Paid (₱)</label>
-            <input type="number" name="amount_paid" min="0" step="0.01" defaultValue={order.amount_paid || 0} className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium shadow-sm" />
-          </div>
+
           
           <div className="space-y-2 md:col-span-2">
             <label className="text-sm font-semibold text-slate-700 ml-1">Description / Notes</label>
