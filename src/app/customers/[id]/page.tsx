@@ -13,8 +13,13 @@ export default async function EditCustomerPage({ params }: { params: { id: strin
   const resolvedParams = await params
   const { id } = resolvedParams
 
-  const { data: customer } = await supabase.from('customers').select('*').eq('id', id).single()
-  const { data: measurements } = await supabase.from('measurements').select('*').eq('customer_id', id).single()
+  const [
+    { data: customer },
+    { data: measurements }
+  ] = await Promise.all([
+    supabase.from('customers').select('*').eq('id', id).single(),
+    supabase.from('measurements').select('*').eq('customer_id', id).single()
+  ])
 
   if (!customer) redirect('/customers')
 

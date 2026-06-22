@@ -10,15 +10,24 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  const { count: totalCustomers } = await supabase.from('customers').select('*', { count: 'exact', head: true })
-  const { data: orders } = await supabase.from('orders').select('*, customers(full_name)').order('created_at', { ascending: false }).limit(5)
-  const { data: customers } = await supabase.from('customers').select('*').order('created_at', { ascending: false }).limit(5)
-  const { count: activeOrders } = await supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'Completed')
+  // Fetch stats and lists concurrently to avoid sequential waterfall latency
+  const [
+    { count: totalCustomers },
+    { data: orders },
+    { data: customers },
+    { count: activeOrders },
+    { data: allOrders },
+    { data: allPayments }
+  ] = await Promise.all([
+    supabase.from('customers').select('*', { count: 'exact', head: true }),
+    supabase.from('orders').select('*, customers(full_name)').order('created_at', { ascending: false }).limit(5),
+    supabase.from('customers').select('*').order('created_at', { ascending: false }).limit(5),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'Completed'),
+    supabase.from('orders').select('total_amount'),
+    supabase.from('payments').select('amount')
+  ])
 
-  const { data: allOrders } = await supabase.from('orders').select('total_amount')
   const totalRevenue = allOrders?.reduce((sum, o) => sum + (o.total_amount || 0), 0) || 0
-
-  const { data: allPayments } = await supabase.from('payments').select('amount')
   const totalCollected = allPayments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
 
   const stats = [
