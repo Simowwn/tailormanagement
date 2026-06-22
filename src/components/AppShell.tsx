@@ -42,7 +42,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md shadow-indigo-500/20">
               <Scissors className="w-4 h-4 text-white" />
             </div>
-            <span className="text-lg font-extrabold text-gray-900 tracking-tight">TailorSwift</span>
+            <span className="text-lg font-extrabold text-gray-900 tracking-tight">TailorTracker</span>
           </Link>
           <div className="w-10" /> {/* Spacer for centering logo */}
         </header>

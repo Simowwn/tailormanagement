@@ -47,6 +47,10 @@ export default function EditCustomerForm({ customer, measurements }: { customer:
               <label className="text-sm font-semibold text-slate-700 ml-1">Address</label>
               <input type="text" name="address" defaultValue={customer.address || ''} className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-medium" />
             </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-semibold text-slate-700 ml-1">Notes</label>
+              <textarea name="notes" rows={4} defaultValue={customer.notes || ''} placeholder="Any specific preferences or details..." className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all resize-none font-medium" />
+            </div>
           </div>
         </section>
 

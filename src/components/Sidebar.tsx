@@ -28,7 +28,7 @@ export function Sidebar({ onClose }: SidebarProps) {
           <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
             <Scissors className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-extrabold text-gray-900 tracking-tight">TailorSwift</span>
+          <span className="text-xl font-extrabold text-gray-900 tracking-tight">TailorTracker</span>
         </div>
         {/* Close button — only visible on mobile */}
         {onClose && (

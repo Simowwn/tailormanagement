@@ -36,7 +36,7 @@ export default function LoginPage() {
               <Scissors className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-3xl font-extrabold text-slate-900 mb-2">Welcome Back</h1>
-            <p className="text-slate-500 text-center font-medium">Sign in to TailorSwift to manage your shop</p>
+            <p className="text-slate-500 text-center font-medium">Sign in to TailorTracker to manage your shop</p>
           </div>
 
           <div className="bg-white/80 backdrop-blur-xl border border-white/40 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">

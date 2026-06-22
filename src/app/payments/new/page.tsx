@@ -13,6 +13,7 @@ export default async function NewPaymentPage() {
   const { data: orders } = await supabase
     .from('orders')
     .select('id, garment_type, total_amount, customers(full_name)')
+    .eq('user_id', user.id)
     .neq('status', 'Cancelled')
     .order('created_at', { ascending: false })
 
