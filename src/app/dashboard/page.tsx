@@ -10,31 +10,45 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
+  // Calculate date range for "Due This Week" (from today to upcoming Sunday)
+  const today = new Date()
+  const dayOfWeek = today.getDay()
+  const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek
+  const upcomingSunday = new Date(today)
+  upcomingSunday.setDate(today.getDate() + daysUntilSunday)
+  
+  const formatLocalDate = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  
+  const startOfTodayStr = formatLocalDate(today)
+  const upcomingSundayStr = formatLocalDate(upcomingSunday)
+
   // Fetch stats and lists concurrently to avoid sequential waterfall latency
   const [
     { count: totalCustomers },
     { data: orders },
     { data: customers },
     { count: activeOrders },
-    { data: allOrders },
-    { data: allPayments }
+    { count: dueThisWeek },
+    { count: readyForPickup }
   ] = await Promise.all([
     supabase.from('customers').select('*', { count: 'exact', head: true }),
     supabase.from('orders').select('*, customers(full_name)').order('created_at', { ascending: false }).limit(5),
     supabase.from('customers').select('*').order('created_at', { ascending: false }).limit(5),
-    supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'Completed'),
-    supabase.from('orders').select('total_amount'),
-    supabase.from('payments').select('amount')
+    supabase.from('orders').select('*', { count: 'exact', head: true }).neq('status', 'Completed').neq('status', 'Cancelled'),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).gte('due_date', startOfTodayStr).lte('due_date', upcomingSundayStr).neq('status', 'Completed').neq('status', 'Cancelled'),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'Ready for Pickup')
   ])
 
-  const totalRevenue = allOrders?.reduce((sum, o) => sum + (o.total_amount || 0), 0) || 0
-  const totalCollected = allPayments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
-
   const stats = [
-    { name: "Total Customers", value: totalCustomers || 0, change: "All time", icon: Users, color: "text-blue-600", bg: "bg-blue-100" },
-    { name: "Active Orders", value: activeOrders || 0, change: "In progress", icon: Scissors, color: "text-indigo-600", bg: "bg-indigo-100" },
-    { name: "Total Revenue", value: `₱${totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, change: "All time", icon: Banknote, color: "text-emerald-600", bg: "bg-emerald-100" },
-    { name: "Amount Collected", value: `₱${totalCollected.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, change: "All time", icon: Coins, color: "text-amber-600", bg: "bg-amber-100" },
+    { name: "Total Customers", value: totalCustomers || 0, change: "All time", icon: Users, color: "text-blue-600", bg: "bg-blue-100", href: "/customers" },
+    { name: "Active Orders", value: activeOrders || 0, change: "In progress", icon: Scissors, color: "text-indigo-600", bg: "bg-indigo-100", href: "/orders" },
+    { name: "Due This Week", value: dueThisWeek || 0, change: `Until Sun, ${upcomingSunday.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`, icon: CalendarClock, color: "text-amber-600", bg: "bg-amber-100", href: "/orders" },
+    { name: "Ready for Pickup", value: readyForPickup || 0, change: "Awaiting customer", icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-100", href: "/orders" },
   ]
 
   const recentOrders = orders || []
@@ -69,18 +83,32 @@ export default async function Dashboard() {
 
           {/* Stats — 2 cols on mobile, 4 on desktop */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {stats.map((stat) => (
-              <div key={stat.name} className="bg-white border border-gray-200 rounded-2xl p-4 md:p-6 shadow-sm hover:border-indigo-200 transition-all group">
-                <div className="flex items-center justify-between mb-3">
-                  <div className={`p-2 md:p-3 rounded-xl ${stat.bg}`}>
-                    <stat.icon className={`w-5 h-5 md:w-6 md:h-6 ${stat.color}`} />
+            {stats.map((stat) => {
+              const CardContent = (
+                <>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`p-2 md:p-3 rounded-xl ${stat.bg} group-hover:scale-105 transition-transform duration-200`}>
+                      <stat.icon className={`w-5 h-5 md:w-6 md:h-6 ${stat.color}`} />
+                    </div>
                   </div>
+                  <h3 className="text-gray-600 font-semibold text-xs md:text-sm">{stat.name}</h3>
+                  <span className="text-2xl md:text-3xl font-extrabold text-gray-900">{stat.value}</span>
+                  <p className="text-xs text-gray-500 mt-1 font-medium">{stat.change}</p>
+                </>
+              )
+
+              const cardClasses = "bg-white border border-gray-200 rounded-2xl p-4 md:p-6 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all group block text-left"
+
+              return stat.href ? (
+                <Link key={stat.name} href={stat.href} className={cardClasses}>
+                  {CardContent}
+                </Link>
+              ) : (
+                <div key={stat.name} className={cardClasses}>
+                  {CardContent}
                 </div>
-                <h3 className="text-gray-600 font-semibold text-xs md:text-sm">{stat.name}</h3>
-                <span className="text-2xl md:text-3xl font-extrabold text-gray-900">{stat.value}</span>
-                <p className="text-xs text-gray-500 mt-1 font-medium">{stat.change}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           {/* Main grid */}
