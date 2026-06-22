@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TailorSwift - Tailor Management System",
+  title: "TailorTracker - Tailor Management System",
   description: "A centralized cloud-based platform for tailors.",
 };
 
