@@ -17,7 +17,13 @@ export default async function CustomersPage({
   const query = resolvedSearchParams?.q || ''
 
   let queryBuilder = supabase.from('customers').select('*').order('created_at', { ascending: false })
-  if (query) queryBuilder = queryBuilder.ilike('full_name', `%${query}%`)
+  if (query) {
+    let processedQuery = query
+    if (processedQuery.startsWith('+63')) {
+      processedQuery = '09' + processedQuery.slice(3)
+    }
+    queryBuilder = queryBuilder.or(`full_name.ilike.%${processedQuery}%,mobile_number.ilike.%${processedQuery}%`)
+  }
   const { data: customers } = await queryBuilder
 
   const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
