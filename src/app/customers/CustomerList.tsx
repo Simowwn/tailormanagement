@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Users, Search, Plus, MoreVertical, AlertCircle, Trash2, Edit3, X } from "lucide-react"
@@ -27,6 +27,25 @@ export default function CustomerList({
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const isFirstRender = useRef(true)
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
+    const delayDebounceFn = setTimeout(() => {
+      if (searchVal.trim()) {
+        router.push(`/customers?q=${encodeURIComponent(searchVal.trim())}`)
+      } else {
+        router.push("/customers")
+      }
+    }, 250)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchVal, router])
 
   const getInitials = (name: string) =>
     name
