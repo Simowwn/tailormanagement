@@ -25,6 +25,11 @@ CREATE TABLE measurements (
   shirt_length NUMERIC,
   inseam NUMERIC,
   neck NUMERIC,
+  shirt_waist NUMERIC,
+  shirt_hips NUMERIC,
+  bust NUMERIC,
+  crotch NUMERIC,
+  bottom_length NUMERIC,
   notes TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

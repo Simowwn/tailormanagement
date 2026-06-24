@@ -40,8 +40,16 @@ export async function createCombinedOrder(formData: FormData) {
   const shirt_length = formData.get('shirt_length') as string
   const inseam = formData.get('inseam') as string
   const neck = formData.get('neck') as string
+  const shirt_waist = formData.get('shirt_waist') as string
+  const shirt_hips = formData.get('shirt_hips') as string
+  const bust = formData.get('bust') as string
+  const crotch = formData.get('crotch') as string
+  const bottom_length = formData.get('bottom_length') as string
 
-  if (chest || waist || hips || shoulder || sleeve_length || shirt_length || inseam || neck) {
+  if (
+    chest || waist || hips || shoulder || sleeve_length || shirt_length || 
+    inseam || neck || shirt_waist || shirt_hips || bust || crotch || bottom_length
+  ) {
     const measurementData = {
       customer_id: customerId,
       user_id: user.id,
@@ -53,6 +61,11 @@ export async function createCombinedOrder(formData: FormData) {
       shirt_length: shirt_length ? parseFloat(shirt_length) : null,
       inseam: inseam ? parseFloat(inseam) : null,
       neck: neck ? parseFloat(neck) : null,
+      shirt_waist: shirt_waist ? parseFloat(shirt_waist) : null,
+      shirt_hips: shirt_hips ? parseFloat(shirt_hips) : null,
+      bust: bust ? parseFloat(bust) : null,
+      crotch: crotch ? parseFloat(crotch) : null,
+      bottom_length: bottom_length ? parseFloat(bottom_length) : null,
     }
     const { error: measurementError } = await supabase
       .from('measurements')

@@ -113,6 +113,9 @@ export default function OrderForm({ customers }: { customers: any[] }) {
                   { label: "Shoulder", name: "shoulder" },
                   { label: "Sleeve Length", name: "sleeve_length" },
                   { label: "Shirt Length", name: "shirt_length" },
+                  { label: "Hips", name: "shirt_hips" },
+                  { label: "Bust", name: "bust" },
+                  { label: "Waist", name: "shirt_waist" },
                 ].map(field => (
                   <div key={field.name} className="space-y-1.5">
                     <label className="text-xs font-semibold text-slate-500 ml-1">{field.label}</label>
@@ -130,6 +133,8 @@ export default function OrderForm({ customers }: { customers: any[] }) {
                   { label: "Waist", name: "waist" },
                   { label: "Hips", name: "hips" },
                   { label: "Inseam", name: "inseam" },
+                  { label: "Crotch", name: "crotch" },
+                  { label: "Length", name: "bottom_length" },
                 ].map(field => (
                   <div key={field.name} className="space-y-1.5">
                     <label className="text-xs font-semibold text-slate-500 ml-1">{field.label}</label>

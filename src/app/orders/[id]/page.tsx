@@ -13,14 +13,20 @@ export default async function EditOrderPage({ params }: { params: { id: string }
   const resolvedParams = await params
   const { id } = resolvedParams
 
-  const { data: order } = await supabase.from('orders').select('*, customers(full_name)').eq('id', id).single()
+  const { data: order } = await supabase.from('orders').select('*, customers(id, full_name)').eq('id', id).single()
 
   if (!order) redirect('/orders')
+
+  const { data: measurements } = await supabase
+    .from('measurements')
+    .select('*')
+    .eq('customer_id', order.customer_id)
+    .single()
 
   return (
     <AppShell>
       <div className="bg-slate-50 min-h-full p-4 md:p-8">
-        <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
+        <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
           
           <header className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex items-center gap-4">
@@ -37,7 +43,7 @@ export default async function EditOrderPage({ params }: { params: { id: string }
             </div>
           </header>
 
-          <EditOrderForm order={order} />
+          <EditOrderForm order={order} measurements={measurements} />
           
         </div>
       </div>
